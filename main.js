@@ -74,6 +74,84 @@ function calculate_neighbors(grid) {
 
   return grid;
 }
+
+function floodfill(i, j) {
+  console.log("floodfill");
+  console.log(i, j);
+  console.log(grid_clicked[i][j]);
+
+  let x = draw_size * j;
+  let y = draw_size * i;
+
+  // draw text with amount of mines around the cell
+  fill(222);
+  square(x, y, draw_size);
+  noStroke();
+  fill(22);
+  textSize(draw_size * 0.5);
+  textAlign(CENTER, CENTER);
+  // if cell has no neiggbours then draw nothing, even not the number 0 and show all neighbours cells with a flood fill function
+  if (grid[i][j] !== 0) {
+    text(cell, x + draw_size / 2, y + draw_size / 2 + 3);
+  }
+  --total_cells;
+
+  let a = i - 1;
+  let b = j - 1;
+  let c = i + 1;
+  let d = j + 1;
+
+  if (i != 0) {
+    if (j != 0) {
+      if (grid[a][b] === 0 && !grid_clicked[a][b]) {
+        grid_clicked[a][b] = true;
+        floodfill(a, b);
+      }
+    }
+    if (grid[a][j] === 0 && !grid_clicked[a][j]) {
+      grid_clicked[a][j] = true;
+      floodfill(a, j);
+    }
+
+    if (j != cols - 1) {
+      if (grid[a][d] === 0 && !grid_clicked[a][d]) {
+        grid_clicked[a][d] = true;
+        floodfill(a, d);
+      }
+    }
+  }
+  if (j != 0) {
+    if (grid[i][b] === 0 && !grid_clicked[i][b]) {
+      grid_clicked[i][b] = true;
+      floodfill(i, b);
+    }
+    if (i != rows - 1) {
+      if (grid[c][b] === 0 && !grid_clicked[c][b]) {
+        grid_clicked[c][b] = true;
+        floodfill(c, b);
+      }
+    }
+  }
+  if (i != rows - 1) {
+    if (grid[c][j] === 0 && !grid_clicked[c][j]) {
+      grid_clicked[c][j] = true;
+      floodfill(c, j);
+    }
+    if (j != cols - 1) {
+      if (grid[c][d] === 0 && !grid_clicked[c][d]) {
+        grid_clicked[c][d] = true;
+        floodfill(c, d);
+      }
+    }
+  }
+  if (j != cols - 1) {
+    if (grid[i][d] === 0 && !grid_clicked[i][d]) {
+      grid_clicked[i][d] = true;
+      floodfill(i, d);
+    }
+  }
+}
+
 function showAllCells() {
   for (let i = 0; i < rows; ++i) {
     for (let j = 0; j < cols; ++j) {
@@ -101,10 +179,6 @@ function showAllCells() {
       }
     }
   }
-}
-
-function floodfill() {
-  console.log("flood fill");
 }
 
 function showCell() {
@@ -153,7 +227,7 @@ function showCell() {
             if (cell !== 0) {
               text(cell, x + draw_size / 2, y + draw_size / 2 + 3);
             } else {
-              floodfill();
+              floodfill(pos_j, pos_i);
             }
             // if statement to end the game when all cells are clicked
             if (total_cells - total_mines === 1) {

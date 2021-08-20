@@ -103,6 +103,10 @@ function showAllCells() {
   }
 }
 
+function floodfill() {
+  console.log("flood fill");
+}
+
 function showCell() {
   let pos_i = Math.floor(mouseX / draw_size);
   let pos_j = Math.floor(mouseY / draw_size);
@@ -120,16 +124,16 @@ function showCell() {
       let cell = grid[pos_j][pos_i];
 
       if (mouseIsPressed) {
-        // draw background when cell clicked
+        // draw background when cell is clicked
         fill(222);
         noStroke();
         square(x, y, draw_size);
+        // draw marker if you think it is a mine by clicking right mousebutton
         if (mouseButton === RIGHT) {
           fill(22, 222, 22);
-          stroke(111, 122, 133);
           circle(x + draw_size / 2, y + draw_size / 2, draw_size / 2);
 
-          console.log("gemarkeerd");
+          // console.log("gemarkeerd");
         } else {
           if (cell === "M") {
             GAME_OVER = true;
@@ -139,39 +143,44 @@ function showCell() {
             console.log("BOOOM!");
             alert("GAME OVER!");
             showAllCells();
-
-            noStroke();
           } else {
-            if (total_cells - total_mines === 1) {
-              FINISHED = true;
-              console.log("u bent uit!");
-              alert("U BENT UIT!");
-            }
-
             // draw text with amount of mines around the cell
             noStroke();
             fill(22);
             textSize(draw_size * 0.5);
             textAlign(CENTER, CENTER);
+            // if cell has no neiggbours then draw nothing, even not the number 0 and show all neighbours cells with a flood fill function
             if (cell !== 0) {
               text(cell, x + draw_size / 2, y + draw_size / 2 + 3);
+            } else {
+              floodfill();
+            }
+            // if statement to end the game when all cells are clicked
+            if (total_cells - total_mines === 1) {
+              FINISHED = true;
+              console.log("u bent uit!");
+              showAllCells();
+              alert("U BENT UIT!");
             }
             --total_cells;
           }
         }
+        // mark the clicked cell as true in the 2D array that keeps track of that (grid_clicked)
         grid_clicked[pos_j][pos_i] = true;
       }
     } else {
       console.log("reeds geklikt");
 
       if (mouseButton === RIGHT) {
+        // erase drawing of green circle and background
         erase();
-        fill(22, 222, 22);
+        noStroke();
+        fill(222);
         circle(x + draw_size / 2, y + draw_size / 2, draw_size / 2);
+        square(x, y, draw_size);
         noErase();
-        grid_clicked[pos_j][pos_i] = false;
 
-        console.log("markering weg?");
+        grid_clicked[pos_j][pos_i] = false;
       }
     }
   }

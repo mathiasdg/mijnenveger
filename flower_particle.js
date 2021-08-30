@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+
 class FlowerParticle {
   constructor(position) {
     // position is of type p5.Vector
